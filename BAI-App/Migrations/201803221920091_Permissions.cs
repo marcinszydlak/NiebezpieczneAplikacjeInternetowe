@@ -3,16 +3,16 @@ namespace Bai_APP.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class Identity : DbMigration
+    public partial class Permissions : DbMigration
     {
         public override void Up()
         {
-            AddColumn("dbo.Users", "UserLogin", c => c.String());
+            AddColumn("dbo.AllowedMessages", "PermissionLevel", c => c.Int(nullable: false));
         }
         
         public override void Down()
         {
-            DropColumn("dbo.Users", "UserLogin");
+            DropColumn("dbo.AllowedMessages", "PermissionLevel");
         }
     }
 }

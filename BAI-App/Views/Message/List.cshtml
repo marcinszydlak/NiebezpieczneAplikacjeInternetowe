@@ -1,0 +1,37 @@
+﻿@model IEnumerable<Bai_APP.Entity.ViewModels.MessageViewModel>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+@if (!string.IsNullOrEmpty(ViewBag.Message))
+{
+    <div class="jumbotron">
+        <h1>@ViewBag.Message</h1>
+    </div>
+}
+<p>
+
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.MessageText)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.MessageText)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.MessageID }) |
+                @Html.ActionLink("Details", "Details", new { id = item.MessageID }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.MessageID })
+            </td>
+        </tr>
+    }
+
+</table>

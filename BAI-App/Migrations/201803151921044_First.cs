@@ -1,4 +1,4 @@
-namespace BAI_App.Migrations
+namespace Bai_APP.Migrations
 {
     using System;
     using System.Data.Entity.Migrations;

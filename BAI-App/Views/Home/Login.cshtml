@@ -1,36 +1,51 @@
-﻿@model BAI_App.Models.ViewModels.UserLoginViewModel
-@using (Html.BeginForm()) 
+﻿@model Bai_APP.Entity.ViewModels.UserLoginViewModel
+@{
+    ViewBag.Title = "Zaloguj się";
+}
+@using (Html.BeginForm())
 {
-    @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>User</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            @Html.LabelFor(model => model.Login, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Login, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Login, "", new { @class = "text-danger" })
-            </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.PasswordFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
-            </div>
-        </div>
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Login" class="btn btn-default" />
-            </div>
+
+    <h2>@ViewBag.Title</h2>
+    <div class="row">
+        <div class="col-md-8">
+            <section id="loginForm">
+                @using (Html.BeginForm("Login", "Home", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get, new { @class = "form-horizontal", role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <h4>Wprowadź dane celem zalogowania się</h4>
+                    <hr />
+                    @Html.ValidationSummary(true)
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Login, new { @class = "col-md-2 control-label" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(m => m.Login, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.Login)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
+                        <div class="col-md-10">
+                            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.Password)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="Login" formmethod="get" class="btn btn-default" />
+                        </div>
+                    </div>
+                    <p>
+                        Dokonaj rejestracji jeżeli nie posiadasz jeszcze konta<br/>
+                        @Html.ActionLink("Utwórz nowe konto", "Register")
+                    </p>
+                }
+            </section>
         </div>
     </div>
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Wróć na stronę główną", "Index")
 </div>

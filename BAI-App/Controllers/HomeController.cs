@@ -4,9 +4,10 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using BAI_App.Models.ViewModels;
+using Bai_APP.Entity.ViewModels;
+using Bai_APP.Services;
 
-namespace BAI_App.Controllers
+namespace Bai_APP.Controllers
 {
     public class HomeController : Controller
     {
@@ -15,30 +16,35 @@ namespace BAI_App.Controllers
             return View();
         }
 
-        public ActionResult Login()
+        [HttpGet]
+        public ActionResult Login(UserLoginViewModel model)
         {
+
+            if (!string.IsNullOrEmpty(model.Login) && !string.IsNullOrEmpty(model.Password))
+            {
+                if (ModelState.IsValid)
+                {
+                    LoggedUserModel login = UserService.Login(model);
+                    Session["login"] = login;
+                    return RedirectToAction("Index");
+                }
+            }
             return View();
         }
 
-        [HttpPost]
-        public ActionResult Login(UserLoginViewModel login)
+        public ActionResult Register(RegisterUserViewModel model)
         {
-                return 
-        }
-
-    
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
-
+            if(ModelState.IsValid)
+            {
+                UserService.RegisterUser(model);
+                return RedirectToAction("Index", "Home");
+            }
             return View();
         }
-
-        public ActionResult Contact()
+        private ActionResult ErrorRedirect(string Message)
         {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
+            TempData["blad"] = Message;
+            return RedirectToAction("Error", "Shared");
         }
     }
 }

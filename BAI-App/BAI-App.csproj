@@ -13,7 +13,7 @@
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BAI_App</RootNamespace>
+    <RootNamespace>Bai_APP</RootNamespace>
     <AssemblyName>BAI-App</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
@@ -150,9 +150,12 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MessageController.cs" />
+    <Compile Include="Controllers\SharedController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\Error.cs" />
+    <Compile Include="Helpers\Notification.cs" />
     <Compile Include="Migrations\201803151921044_First.cs" />
     <Compile Include="Migrations\201803151921044_First.Designer.cs">
       <DependentUpon>201803151921044_First.cs</DependentUpon>
@@ -161,13 +164,24 @@
     <Compile Include="Migrations\201803151939011_Identity.Designer.cs">
       <DependentUpon>201803151939011_Identity.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201803221920091_Permissions.cs" />
+    <Compile Include="Migrations\201803221920091_Permissions.Designer.cs">
+      <DependentUpon>201803221920091_Permissions.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AllowedMessage.cs" />
     <Compile Include="Models\DataContext.cs" />
+    <Compile Include="Models\Enums\Permission.cs" />
     <Compile Include="Models\Message.cs" />
     <Compile Include="Models\User.cs" />
+    <Compile Include="Models\ViewModels\LoggedUserModel.cs" />
+    <Compile Include="Models\ViewModels\MessageOwnerViewModel.cs" />
+    <Compile Include="Models\ViewModels\MessageViewModel.cs" />
+    <Compile Include="Models\ViewModels\RegisterUserViewModel.cs" />
     <Compile Include="Models\ViewModels\UserLoginViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\MessageService.cs" />
+    <Compile Include="Services\UserService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\DataConnection.mdf" />
@@ -207,15 +221,11 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Home\Login.cshtml" />
     <Content Include="Views\Message\Create.cshtml" />
-    <Content Include="Views\Message\Delete.cshtml" />
-    <Content Include="Views\Message\Details.cshtml" />
-    <Content Include="Views\Message\Edit.cshtml" />
-    <Content Include="Views\Message\Index.cshtml" />
+    <Content Include="Views\Message\List.cshtml" />
+    <Content Include="Views\Home\Register.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201803151921044_First.resx">
@@ -223,6 +233,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201803151939011_Identity.resx">
       <DependentUpon>201803151939011_Identity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201803221920091_Permissions.resx">
+      <DependentUpon>201803221920091_Permissions.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -238,6 +251,7 @@
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

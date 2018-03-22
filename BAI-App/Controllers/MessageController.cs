@@ -7,6 +7,9 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Bai_APP.Entity;
+using Bai_APP.Entity.ViewModels;
+using Bai_APP.Helpers;
+using BAI_App.Services;
 
 namespace BAI_App.Controllers
 {
@@ -20,52 +23,44 @@ namespace BAI_App.Controllers
             return View(db.Messages.ToList());
         }
 
-        // GET: Messages/Details/5
-        public ActionResult Details(int? id)
+        [HttpGet]
+        public ActionResult Create(MessageViewModel message)
         {
-            if (id == null)
+            if (Session["login"] != null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                if (ModelState.IsValid)
+                {
+                    LoggedUserModel l = (LoggedUserModel)Session["login"];
+                    MessageService.InsertMessage(l.UserID, message.MessageText);
+                    return RedirectToAction("List", "Message");
+                }
+                return View(message);
             }
-            Message message = db.Messages.Find(id);
-            if (message == null)
+            else
             {
-                return HttpNotFound();
-            }
-            return View(message);
+                return ErrorRedirect("Nie masz uprawnień do tworzenia wpisów do bazy danych");
+            }            
         }
 
-        // GET: Messages/Create
-        public ActionResult Create()
+        [HttpGet]
+        public ActionResult List()
         {
-            return View();
-        }
-
-        // POST: Messages/Create
-        // Aby zapewnić ochronę przed atakami polegającymi na przesyłaniu dodatkowych danych, włącz określone właściwości, z którymi chcesz utworzyć powiązania.
-        // Aby uzyskać więcej szczegółów, zobacz https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "MessageID,Text,Mod")] Message message)
-        {
-            if (ModelState.IsValid)
+            LoggedUserModel l = (LoggedUserModel)Session["login"];
+            if (l != null)
             {
-                db.Messages.Add(message);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                List<MessageViewModel> messages = l.Messages;
+                return View(messages);
             }
-
-            return View(message);
+            else
+            {
+                return RedirectToAction("Error", "Shared");
+            }
         }
 
-        // GET: Messages/Edit/5
+        [HttpGet]
         public ActionResult Edit(int? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Message message = db.Messages.Find(id);
+            MessageViewModel message = MessageService.GetMessage(id);
             if (message == null)
             {
                 return HttpNotFound();
@@ -73,47 +68,41 @@ namespace BAI_App.Controllers
             return View(message);
         }
 
-        // POST: Messages/Edit/5
-        // Aby zapewnić ochronę przed atakami polegającymi na przesyłaniu dodatkowych danych, włącz określone właściwości, z którymi chcesz utworzyć powiązania.
-        // Aby uzyskać więcej szczegółów, zobacz https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "MessageID,Text,Mod")] Message message)
+        [HttpGet]
+        public ActionResult Edit(MessageViewModel message)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(message).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                MessageService.UpdateMessage(message);
+                return RedirectToAction("List","Message");
             }
-            return View(message);
+            return View(message.MessageID);
         }
 
         // GET: Messages/Delete/5
         public ActionResult Delete(int? id)
         {
-            if (id == null)
+            if (id.HasValue)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                LoggedUserModel l = (LoggedUserModel)Session["login"];
+                if(MessageService.CheckMessagePermission(l.UserID,id.Value))
+                {
+                    return View(id);
+                }
+                return ErrorRedirect(Error.InsufficientResourcePermission);
             }
-            Message message = db.Messages.Find(id);
-            if (message == null)
+            else
             {
-                return HttpNotFound();
+                return ErrorRedirect(Error.InvalidMessageID);
             }
-            return View(message);
         }
 
-        // POST: Messages/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        [HttpGet]
+        public ActionResult Delete(MessageViewModel model)
         {
-            Message message = db.Messages.Find(id);
-            db.Messages.Remove(message);
-            db.SaveChanges();
             return RedirectToAction("Index");
         }
+
 
         protected override void Dispose(bool disposing)
         {
@@ -122,6 +111,12 @@ namespace BAI_App.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        private ActionResult ErrorRedirect(string Message)
+        {
+            TempData["blad"] = Message;
+            return RedirectToAction("Error", "Shared");
         }
     }
 }
