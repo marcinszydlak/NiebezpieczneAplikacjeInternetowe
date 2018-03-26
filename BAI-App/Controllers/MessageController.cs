@@ -30,7 +30,7 @@ namespace BAI_App.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    LoggedUserModel l = (LoggedUserModel)Session["login"];
+                    LoggedUserViewModel l = (LoggedUserViewModel)Session["login"];
                     MessageService.InsertMessage(l.UserID, message.MessageText);
                     return RedirectToAction("List", "Message");
                 }
@@ -39,13 +39,13 @@ namespace BAI_App.Controllers
             else
             {
                 return ErrorRedirect("Nie masz uprawnień do tworzenia wpisów do bazy danych");
-            }            
+            }
         }
 
         [HttpGet]
         public ActionResult List()
         {
-            LoggedUserModel l = (LoggedUserModel)Session["login"];
+            LoggedUserViewModel l = (LoggedUserViewModel)Session["login"];
             if (l != null)
             {
                 List<MessageViewModel> messages = l.Messages;
@@ -57,52 +57,71 @@ namespace BAI_App.Controllers
             }
         }
 
-        [HttpGet]
-        public ActionResult Edit(int? id)
-        {
-            MessageViewModel message = MessageService.GetMessage(id);
-            if (message == null)
-            {
-                return HttpNotFound();
-            }
-            return View(message);
-        }
 
-        [HttpGet]
-        public ActionResult Edit(MessageViewModel message)
-        {
-            if (ModelState.IsValid)
-            {
-                MessageService.UpdateMessage(message);
-                return RedirectToAction("List","Message");
-            }
-            return View(message.MessageID);
-        }
 
-        // GET: Messages/Delete/5
-        public ActionResult Delete(int? id)
+        //public ActionResult Edit(int? id)
+        //{
+        //    MessageViewModel model = MessageService.GetMessage(id);
+        //    return View(model);
+        //}
+        [HttpGet]
+        public ActionResult Edit(MessageViewModel item)
         {
-            if (id.HasValue)
+            LoggedUserViewModel l = (LoggedUserViewModel)Session["login"];
+            if (!MessageService.CheckMessagePermission(l.UserID, item.MessageID))
             {
-                LoggedUserModel l = (LoggedUserModel)Session["login"];
-                if(MessageService.CheckMessagePermission(l.UserID,id.Value))
-                {
-                    return View(id);
-                }
-                return ErrorRedirect(Error.InsufficientResourcePermission);
+                return ErrorRedirect(Error.InsufficientOperationPermission);
             }
             else
             {
-                return ErrorRedirect(Error.InvalidMessageID);
-            }
-        }
+                if (ModelState.IsValid)
+                {
+                    MessageService.UpdateMessage(item);
 
+                    l.Messages.Where(x => x.MessageID == item.MessageID).First().MessageText = item.MessageText;
+                    return RedirectToAction("List");
+                }
+                else
+                {
+                    if (item.MessageText == null)
+                    {
+                        item = MessageService.GetMessage(item.MessageID);
+                    }
+                }
+            }
+            return View(item);
+        }
         [HttpGet]
         public ActionResult Delete(MessageViewModel model)
         {
-            return RedirectToAction("Index");
-        }
 
+            LoggedUserViewModel l = (LoggedUserViewModel)Session["login"];
+            if (MessageService.CheckMessagePermission(l.UserID, model.MessageID))
+            {
+                if (ModelState.IsValid)
+                {
+                    if (MessageService.CheckMessageExists(model))
+                    {
+                        ViewBag.Message = $"wpis {model.MessageID} został usunięty";
+                        l.Messages.RemoveAll(x => x.MessageID == model.MessageID);
+                        MessageService.DeleteMessage(model.MessageID);
+                        return RedirectToAction("List", "Message");
+                    }
+                    else
+                    {
+                        return ErrorRedirect(Error.InsufficientResourcePermission);
+                    }
+                }
+                else
+                {
+                    return ErrorRedirect(Error.InvalidMessageID);
+                }
+            }
+            else
+            {
+                return ErrorRedirect(Error.InsufficientResourcePermission);
+            }
+        }
 
         protected override void Dispose(bool disposing)
         {

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Bai_APP.Services;
+using System.Transactions;
 
 namespace BAI_App.Services
 {
@@ -27,21 +28,34 @@ namespace BAI_App.Services
             return messages;
         }
 
-        public static bool CheckMessagePermission(int userID,int messageID)
-        {
-            MessageOwnerViewModel model = GetMessageOwner(messageID);
-            return model.OwnerID == userID;
-        }
+        public static Dictionary<int, Permission> GetMessagePermissions(int userID)
+            {
+            }
 
-        public static MessageOwnerViewModel GetMessageOwner(int messageID)
+        public static bool CheckMessageExists(MessageViewModel model)
         {
             using (DataContext db = new DataContext())
             {
-                return db.Messages.Where(x => x.MessageID == messageID).Select(x => new MessageOwnerViewModel()
+                return db.Messages.FirstOrDefault(x => x.MessageID == model.MessageID && x.Text == model.MessageText) != null;
+            }
+        }
+
+        public static bool CheckMessagePermission(int userID,int messageID,Permission permission = Permission.FullAccess)
+        {
+            MessagePermissioniewModel model = GetUsersPermissions(messageID).Where(x => x.UserID == userID).FirstOrDefault();
+            return model?.UserID == userID && model.PermissionLevel >= (int)permission;
+        }
+
+        public static List<MessagePermissioniewModel> GetUsersPermissions(int messageID)
+        {
+            using (DataContext db = new DataContext())
+            {
+                return db.AllowedMessages.Where(x => x.MessageID == messageID && x.PermissionLevel == (int)Permission.Owner).Select(x => new MessagePermissioniewModel()
                 {
                     MessageID = x.MessageID,
-                    OwnerID = x.OwnerID
-                }).FirstOrDefault();
+                    UserID = x.UserID,
+                    PermissionLevel = x.PermissionLevel
+                }).ToList();
             }
         }
 
@@ -67,24 +81,34 @@ namespace BAI_App.Services
         public static void InsertMessage(int userID, string Content)
         {
             Message m;
-            using (DataContext db = new DataContext())
+            TransactionOptions options = new TransactionOptions()
             {
-                m = db.Messages.Add(new Message()
+                IsolationLevel = IsolationLevel.ReadCommitted,
+                Timeout = TimeSpan.MaxValue
+            };
+            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, options))
+            {
+                using (DataContext db = new DataContext())
                 {
-                    Text = Content,
-                    OwnerID = userID
-                });
-                db.SaveChanges();
+                    m = db.Messages.Add(new Message()
+                    {
+                        Text = Content,
+                        Mod = DateTime.Now,
+                    });
+                    db.SaveChanges();
+                }
+                InsertAllowedMessage(userID, m.MessageID);
+                List<int> usersID = UserService.GetUserIDs();
+                foreach (int ID in usersID.Where(x => x != userID))
+                {
+                    InsertAllowedMessage(ID, m.MessageID, Permission.Unavailable);
+                }
+                scope.Complete();
             }
-            InsertAllowedMessage(userID, m.MessageID);
-            List<int> usersID = UserService.GetUserIDs();
-            foreach (int ID in usersID)
-            {
-                InsertAllowedMessage(ID, m.MessageID, Permission.Unavailable);
-            }
+            
         }
 
-        public static void InsertAllowedMessage(int userID, int messageID, Permission permission = Permission.FullAccess)
+        public static void InsertAllowedMessage(int userID, int messageID, Permission permission = Permission.Owner)
         {
             using (DataContext db = new DataContext())
             {
@@ -110,14 +134,23 @@ namespace BAI_App.Services
 
         public static void DeleteMessage(int MessageID)
         {
-            using (DataContext db = new DataContext())
+            TransactionOptions options = new TransactionOptions()
             {
-                Message message = db.Messages.Where(x => x.MessageID == MessageID).FirstOrDefault();
-                if (message != null)
+                IsolationLevel = IsolationLevel.ReadCommitted,
+                Timeout = TimeSpan.MaxValue
+            };
+            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, options))
+            {
+                using (DataContext db = new DataContext())
                 {
-                    DeleteAllowedMessages(message);
-                    db.Messages.Remove(message);
+                    Message message = db.Messages.Where(x => x.MessageID == MessageID).FirstOrDefault();
+                    if (message != null)
+                    {
+                        DeleteAllowedMessages(message);
+                        db.Messages.Remove(message);
+                    }
                 }
+                scope.Complete();
             }
         }
         public static void UpdateMessage(MessageViewModel message)

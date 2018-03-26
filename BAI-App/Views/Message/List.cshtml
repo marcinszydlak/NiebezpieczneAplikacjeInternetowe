@@ -1,6 +1,8 @@
 ﻿@model IEnumerable<Bai_APP.Entity.ViewModels.MessageViewModel>
 
+
 <p>
+    <br />
     @Html.ActionLink("Create New", "Create")
 </p>
 @if (!string.IsNullOrEmpty(ViewBag.Message))
@@ -9,9 +11,6 @@
         <h1>@ViewBag.Message</h1>
     </div>
 }
-<p>
-
-</p>
 <table class="table">
     <tr>
         <th>
@@ -24,14 +23,14 @@
     {
         <tr>
             <td>
+                
                 @Html.DisplayFor(modelItem => item.MessageText)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.MessageID }) |
-                @Html.ActionLink("Details", "Details", new { id = item.MessageID }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.MessageID })
+                @Html.ActionLink("Edit", "Edit", new { MessageID = item.MessageID, MessageText = item.MessageText }) |
+                @Html.ActionLink("Details", "Details", new { MessageID = item.MessageID, MessageText = item.MessageText }) |
+                @Html.ActionLink("Delete", "Delete", new { MessageID = item.MessageID, MessageText = item.MessageText })
             </td>
         </tr>
     }
-
 </table>

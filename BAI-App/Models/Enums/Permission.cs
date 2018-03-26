@@ -9,6 +9,7 @@ namespace Bai_APP.Models.Enums
     {
         Unavailable = 0,
         ReadOnly = 1,
-        FullAccess = 2
+        FullAccess = 2,
+        Owner = 3
     }
 }

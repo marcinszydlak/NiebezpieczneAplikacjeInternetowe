@@ -24,7 +24,7 @@ namespace Bai_APP.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    LoggedUserModel login = UserService.Login(model);
+                    LoggedUserViewModel login = UserService.Login(model);
                     Session["login"] = login;
                     return RedirectToAction("Index");
                 }

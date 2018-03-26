@@ -5,9 +5,10 @@ using System.Web;
 
 namespace Bai_APP.Entity.ViewModels
 {
-    public class MessageOwnerViewModel
+    public class MessagePermissioniewModel
     {
         public int MessageID { get; set; }
-        public int OwnerID { get; set; }
+        public int UserID { get; set; }
+        public int PermissionLevel { get; set; }
     }
 }

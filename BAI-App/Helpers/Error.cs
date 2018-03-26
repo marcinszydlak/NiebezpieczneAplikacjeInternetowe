@@ -10,7 +10,7 @@ namespace Bai_APP.Helpers
     {
         public const string InsufficientOperationPermission = "Nie masz wystarczających uprawnień do wykonania operacji";
         public const string InsufficientResourcePermission = "Nie masz uprawnień do zasobu";
-        public const string InvalidMessageID = "Niepoprawny identyfikator wiadomości";
+        public const string InvalidMessageID = "Nie ma takiej wiadomości";
         public const string PasswordMustBeSame = "Hasła nie są takie same";
     }
 }

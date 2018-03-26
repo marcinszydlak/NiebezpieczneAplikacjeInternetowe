@@ -57,8 +57,10 @@
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
+    <Reference Include="System.Activities" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -168,6 +170,10 @@
     <Compile Include="Migrations\201803221920091_Permissions.Designer.cs">
       <DependentUpon>201803221920091_Permissions.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201803251643299_Owner.cs" />
+    <Compile Include="Migrations\201803251643299_Owner.Designer.cs">
+      <DependentUpon>201803251643299_Owner.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AllowedMessage.cs" />
     <Compile Include="Models\DataContext.cs" />
@@ -175,7 +181,7 @@
     <Compile Include="Models\Message.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\ViewModels\LoggedUserModel.cs" />
-    <Compile Include="Models\ViewModels\MessageOwnerViewModel.cs" />
+    <Compile Include="Models\ViewModels\MessageePermissionViewModel.cs" />
     <Compile Include="Models\ViewModels\MessageViewModel.cs" />
     <Compile Include="Models\ViewModels\RegisterUserViewModel.cs" />
     <Compile Include="Models\ViewModels\UserLoginViewModel.cs" />
@@ -226,6 +232,7 @@
     <Content Include="Views\Message\Create.cshtml" />
     <Content Include="Views\Message\List.cshtml" />
     <Content Include="Views\Home\Register.cshtml" />
+    <Content Include="Views\Message\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201803151921044_First.resx">
@@ -236,6 +243,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201803221920091_Permissions.resx">
       <DependentUpon>201803221920091_Permissions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201803251643299_Owner.resx">
+      <DependentUpon>201803251643299_Owner.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

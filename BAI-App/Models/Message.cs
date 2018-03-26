@@ -18,8 +18,6 @@ namespace Bai_APP.Entity
         public string Text { get; set; }
         [DisplayName("Data ostatniej modyfikacji")]
         public DateTime Mod { get; set; }
-        [ForeignKey("User")]
-        public int OwnerID { get; set; }
         public ICollection<AllowedMessage> AllowedMessages { get; set; }
     }
 }
