@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using Bai_APP.Entity;
 using Bai_APP.Entity.ViewModels;
 using Bai_APP.Helpers;
+using Bai_APP.Models.Enums;
 using BAI_App.Services;
 
 namespace BAI_App.Controllers
@@ -91,35 +92,60 @@ namespace BAI_App.Controllers
             }
             return View(item);
         }
+
+
         [HttpGet]
         public ActionResult Delete(MessageViewModel model)
-        {
-
+        { 
             LoggedUserViewModel l = (LoggedUserViewModel)Session["login"];
-            if (MessageService.CheckMessagePermission(l.UserID, model.MessageID))
+            if (MessageService.CheckMessagePermission(l.UserID, model.MessageID, Permission.Owner))
             {
-                if (ModelState.IsValid)
+                if (ModelState.IsValid && MessageService.CheckMessageExists(model))
                 {
-                    if (MessageService.CheckMessageExists(model))
-                    {
-                        ViewBag.Message = $"wpis {model.MessageID} został usunięty";
-                        l.Messages.RemoveAll(x => x.MessageID == model.MessageID);
-                        MessageService.DeleteMessage(model.MessageID);
-                        return RedirectToAction("List", "Message");
-                    }
-                    else
-                    {
-                        return ErrorRedirect(Error.InsufficientResourcePermission);
-                    }
+                    ViewBag.Message = $"wpis {model.MessageID} został usunięty";
+                    l.Messages.RemoveAll(x => x.MessageID == model.MessageID);
+                    MessageService.DeleteMessage(model.MessageID);
+                    return RedirectToAction("List", "Message");
                 }
                 else
                 {
-                    return ErrorRedirect(Error.InvalidMessageID);
+                    return ErrorRedirect(Error.InvalidMessage);
+                }
+            }
+
+            else
+            {
+                return ErrorRedirect(Error.InsufficientResourcePermission);
+            }
+        }
+
+        [HttpGet]
+        public ActionResult ManageMessagePermissions()
+        {
+            LoggedUserViewModel l = (LoggedUserViewModel)Session["login"];
+            List<MessageViewModel> messages = MessageService.GetUserMessages(l.UserID);
+            return View(messages);
+        }
+
+        [HttpGet]
+        public ActionResult ManageUserPermissions(MessageViewModel model)
+        {
+            LoggedUserViewModel l = (LoggedUserViewModel)Session["login"];
+            if (MessageService.CheckMessageExists(model))
+            {
+                if (MessageService.CheckMessagePermission(l.UserID, model.MessageID, Permission.Owner))
+                {
+                    List<MessagePermissionViewModel> permissionModel = MessageService.GetMessagePermissions(model.MessageID);
+                    return View(model);
+                }
+                else
+                {
+                    return ErrorRedirect(Error.InsufficientOperationPermission);
                 }
             }
             else
             {
-                return ErrorRedirect(Error.InsufficientResourcePermission);
+                return ErrorRedirect(Error.InvalidMessage);
             }
         }
 

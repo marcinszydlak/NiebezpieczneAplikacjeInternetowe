@@ -31,7 +31,8 @@ namespace Bai_APP.Controllers
             }
             return View();
         }
-
+        
+        [HttpGet]
         public ActionResult Register(RegisterUserViewModel model)
         {
             if(ModelState.IsValid)
@@ -40,6 +41,13 @@ namespace Bai_APP.Controllers
                 return RedirectToAction("Index", "Home");
             }
             return View();
+        }
+
+        [HttpGet]
+        public ActionResult Logout()
+        {
+            Session["login"] = null;
+            return RedirectToAction("Index");
         }
         private ActionResult ErrorRedirect(string Message)
         {

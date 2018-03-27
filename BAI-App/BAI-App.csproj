@@ -233,6 +233,8 @@
     <Content Include="Views\Message\List.cshtml" />
     <Content Include="Views\Home\Register.cshtml" />
     <Content Include="Views\Message\Edit.cshtml" />
+    <Content Include="Views\Message\ManageMessagePermissions.cshtml" />
+    <Content Include="Views\Message\ManageUserPermissions.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201803151921044_First.resx">

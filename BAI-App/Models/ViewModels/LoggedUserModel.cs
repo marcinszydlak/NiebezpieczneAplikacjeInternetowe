@@ -13,7 +13,6 @@ namespace Bai_APP.Entity.ViewModels
         public int UserID { get; set; }
         public string Login { get; set; }
         public List<MessageViewModel> Messages { get; set; }
-        public Dictionary<int,Permission> Permissions { get; set; }
         public override string ToString()
         {
             return Login;

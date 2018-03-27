@@ -15,22 +15,17 @@ namespace BAI_App.Services
     {
         public static List<MessageViewModel> GetUserMessages(int userID)
         {
-            List<AllowedMessage> allowedMessages;
+            List<MessageViewModel> messages = new List<MessageViewModel>();
             using (DataContext db = new DataContext())
             {
-                allowedMessages = db.AllowedMessages.Where(x => x.UserID == userID && x.PermissionLevel >= 1).ToList();
-            }
-            List<MessageViewModel> messages = new List<MessageViewModel>();
-            foreach (int MessageID in allowedMessages.Select(x => x.MessageID))
-            {
-                messages.Add(GetMessage(MessageID));
+                messages = db.AllowedMessages.Where(x => x.UserID == userID && x.PermissionLevel == (int)Permission.Owner).Select(x => new MessageViewModel()
+                {
+                    MessageID = x.MessageID,
+                    MessageText = x.Message.Text
+                }).ToList();
             }
             return messages;
         }
-
-        public static Dictionary<int, Permission> GetMessagePermissions(int userID)
-            {
-            }
 
         public static bool CheckMessageExists(MessageViewModel model)
         {
@@ -40,17 +35,30 @@ namespace BAI_App.Services
             }
         }
 
-        public static bool CheckMessagePermission(int userID,int messageID,Permission permission = Permission.FullAccess)
-        {
-            MessagePermissioniewModel model = GetUsersPermissions(messageID).Where(x => x.UserID == userID).FirstOrDefault();
-            return model?.UserID == userID && model.PermissionLevel >= (int)permission;
-        }
-
-        public static List<MessagePermissioniewModel> GetUsersPermissions(int messageID)
+        public static List<MessagePermissionViewModel> GetMessagePermissions(int messageID)
         {
             using (DataContext db = new DataContext())
             {
-                return db.AllowedMessages.Where(x => x.MessageID == messageID && x.PermissionLevel == (int)Permission.Owner).Select(x => new MessagePermissioniewModel()
+                return db.AllowedMessages.Where(x => x.MessageID == messageID).Select(x => new MessagePermissionViewModel()
+                {
+                    MessageID = messageID,
+                    PermissionLevel = x.PermissionLevel,
+                    UserID = x.UserID
+                }).ToList();
+            }
+        }
+
+        public static bool CheckMessagePermission(int userID,int messageID,Permission permission = Permission.FullAccess)
+        {
+            MessagePermissionViewModel model = GetUsersPermissions(messageID).Where(x => x.UserID == userID).FirstOrDefault();
+            return model?.UserID == userID && model.PermissionLevel >= (int)permission;
+        }
+
+        public static List<MessagePermissionViewModel> GetUsersPermissions(int messageID)
+        {
+            using (DataContext db = new DataContext())
+            {
+                return db.AllowedMessages.Where(x => x.MessageID == messageID && x.PermissionLevel == (int)Permission.Owner).Select(x => new MessagePermissionViewModel()
                 {
                     MessageID = x.MessageID,
                     UserID = x.UserID,

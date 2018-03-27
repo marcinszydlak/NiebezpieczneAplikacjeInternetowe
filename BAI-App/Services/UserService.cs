@@ -24,8 +24,6 @@ namespace Bai_APP.Services
                         MessageID = y.MessageID,
                         MessageText = y.Text
                     }).ToList(),
-                    Permissions = db.AllowedMessages.Where(y => y.UserID == x.UserID && y.PermissionLevel != (int)Permission.Unavailable)
-                                    .ToDictionary(y => y.MessageID, y => (Permission)y.PermissionLevel)
                 }).FirstOrDefault();
             }  
         }

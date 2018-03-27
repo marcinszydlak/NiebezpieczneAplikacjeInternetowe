@@ -19,22 +19,35 @@
                 </button>
                 @Html.ActionLink("Projekt - bezpieczeństwo aplikacji internetowych", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
-            <div class="navbar-collapse collapse">
+            <div class="navbar-collapse">
+             @if (Session["login"] == null)
+            {
                 <ul class="nav navbar-nav navbar-right">
-                    @if (Session["login"] == null)
-                    {
                     <li>@Html.ActionLink("Zaloguj", "Login", "Home")</li>
-                    }
-                    else
-                    {
-                        <li><a>Witaj @Session["login"]</a></li>
-                        <li>@Html.ActionLink("Utwórz nową wiadomość","Create","Message")</li>
-                        <li>@Html.ActionLink("Pokaż moje wiadomosci","List","Message")</li>
-                    }
                 </ul>
+            }
+            else
+            {
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a>Witaj @Session["login"]</a></li>
+                    <li>@Html.ActionLink("Utwórz nową wiadomość", "Create", "Message")</li>
+                    <li>@Html.ActionLink("Pokaż moje wiadomosci", "List", "Message")</li>
+                    <li>@Html.ActionLink("Wyloguj", "Logout", "Home")</li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li>@Html.ActionLink("Zarządzaj dostępem do wiadomosci", "ManageMessagePermissions","Message")</li>
+                </ul>
+            }
             </div>
         </div>
     </div>
+    @if (Session["login"] != null)
+    {
+    <div>
+        <br/>
+        <br/>
+    </div>
+    }
     <div class="container body-content">
         @RenderBody()
         <hr />
