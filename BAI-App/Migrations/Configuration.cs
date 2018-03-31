@@ -4,16 +4,15 @@ namespace Bai_APP.Migrations
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
-    using Bai_APP.Entity;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<DataContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<Bai_APP.Entity.DataContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
         }
 
-        protected override void Seed(DataContext context)
+        protected override void Seed(Bai_APP.Entity.DataContext context)
         {
             //  This method will be called after migrating to the latest version.
 

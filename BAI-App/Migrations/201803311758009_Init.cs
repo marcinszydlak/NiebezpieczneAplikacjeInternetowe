@@ -3,7 +3,7 @@ namespace Bai_APP.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class First : DbMigration
+    public partial class Init : DbMigration
     {
         public override void Up()
         {
@@ -14,6 +14,7 @@ namespace Bai_APP.Migrations
                         AllowID = c.Int(nullable: false, identity: true),
                         UserID = c.Int(nullable: false),
                         MessageID = c.Int(nullable: false),
+                        PermissionLevel = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.AllowID)
                 .ForeignKey("dbo.Messages", t => t.MessageID, cascadeDelete: true)
@@ -36,6 +37,7 @@ namespace Bai_APP.Migrations
                 c => new
                     {
                         UserID = c.Int(nullable: false, identity: true),
+                        UserLogin = c.String(),
                         PasswordHash = c.String(),
                         Salt = c.String(),
                         LastLogin = c.DateTime(nullable: false),

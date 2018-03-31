@@ -158,21 +158,9 @@
     </Compile>
     <Compile Include="Helpers\Error.cs" />
     <Compile Include="Helpers\Notification.cs" />
-    <Compile Include="Migrations\201803151921044_First.cs" />
-    <Compile Include="Migrations\201803151921044_First.Designer.cs">
-      <DependentUpon>201803151921044_First.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201803151939011_Identity.cs" />
-    <Compile Include="Migrations\201803151939011_Identity.Designer.cs">
-      <DependentUpon>201803151939011_Identity.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201803221920091_Permissions.cs" />
-    <Compile Include="Migrations\201803221920091_Permissions.Designer.cs">
-      <DependentUpon>201803221920091_Permissions.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201803251643299_Owner.cs" />
-    <Compile Include="Migrations\201803251643299_Owner.Designer.cs">
-      <DependentUpon>201803251643299_Owner.cs</DependentUpon>
+    <Compile Include="Migrations\201803311758009_Init.cs" />
+    <Compile Include="Migrations\201803311758009_Init.Designer.cs">
+      <DependentUpon>201803311758009_Init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AllowedMessage.cs" />
@@ -216,7 +204,9 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -237,20 +227,6 @@
     <Content Include="Views\Message\ManageUserPermissions.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201803151921044_First.resx">
-      <DependentUpon>201803151921044_First.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201803151939011_Identity.resx">
-      <DependentUpon>201803151939011_Identity.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201803221920091_Permissions.resx">
-      <DependentUpon>201803221920091_Permissions.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201803251643299_Owner.resx">
-      <DependentUpon>201803251643299_Owner.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
   </ItemGroup>
   <ItemGroup>
@@ -264,6 +240,11 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201803311758009_Init.resx">
+      <DependentUpon>201803311758009_Init.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
