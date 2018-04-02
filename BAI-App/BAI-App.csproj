@@ -171,8 +171,13 @@
     <Compile Include="Migrations\201804021858068_Add_AttemptsToLockAccount_Field_To_User_Table.Designer.cs">
       <DependentUpon>201804021858068_Add_AttemptsToLockAccount_Field_To_User_Table.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201804022054092_Add_AnonymousUser_table.cs" />
+    <Compile Include="Migrations\201804022054092_Add_AnonymousUser_table.Designer.cs">
+      <DependentUpon>201804022054092_Add_AnonymousUser_table.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AllowedMessage.cs" />
+    <Compile Include="Models\AnonymousUser.cs" />
     <Compile Include="Models\DataContext.cs" />
     <Compile Include="Models\Enums\Permission.cs" />
     <Compile Include="Models\Message.cs" />
@@ -261,6 +266,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201804021858068_Add_AttemptsToLockAccount_Field_To_User_Table.resx">
       <DependentUpon>201804021858068_Add_AttemptsToLockAccount_Field_To_User_Table.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804022054092_Add_AnonymousUser_table.resx">
+      <DependentUpon>201804022054092_Add_AnonymousUser_table.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

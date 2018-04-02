@@ -14,7 +14,6 @@ namespace Bai_APP.Controllers
         [HttpGet]
         public ActionResult Login(UserLoginViewModel model)
         {
-
             if (!string.IsNullOrEmpty(model.Login) && !string.IsNullOrEmpty(model.Password))
             {
                 if (ModelState.IsValid)
@@ -24,6 +23,7 @@ namespace Bai_APP.Controllers
                     return RedirectToAction("Index");
                 }
             }
+
             return View();
         }
         
@@ -35,6 +35,7 @@ namespace Bai_APP.Controllers
                 UserService.RegisterUser(model);
                 return RedirectToAction("Index", "Home");
             }
+
             return View();
         }
 
@@ -42,11 +43,14 @@ namespace Bai_APP.Controllers
         public ActionResult Logout()
         {
             Session["login"] = null;
+
             return RedirectToAction("Index");
         }
+
         private ActionResult ErrorRedirect(string Message)
         {
             TempData["blad"] = Message;
+
             return RedirectToAction("Error", "Shared");
         }
     }
