@@ -1,4 +1,6 @@
 ﻿using System.Web.Mvc;
+using Bai_APP.Models.ViewModels;
+using Bai_APP.Services;
 
 namespace Bai_APP.Controllers
 {
@@ -12,7 +14,9 @@ namespace Bai_APP.Controllers
 
         public ActionResult Change()
         {
-            return View();
+            UserSettingsViewModel userSettingsViewModel = SettingsService.GetUserSettings(Session["login"].ToString());
+
+            return View(userSettingsViewModel);
         }
     }
 }

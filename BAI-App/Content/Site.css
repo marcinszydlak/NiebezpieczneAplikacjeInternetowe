@@ -22,3 +22,11 @@ select,
 textarea {
     max-width: 280px;
 }
+
+#container .table {
+    width: 500px;
+}
+
+#container .right {
+    float: right;
+}

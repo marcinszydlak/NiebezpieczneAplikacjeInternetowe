@@ -17,8 +17,17 @@ namespace Bai_APP.Entity
         public string PasswordHash { get; set; }
         public string Salt { get; set; }
 
-        [DisplayName("Data ostatniego logowania")]
-        public DateTime LastLogin { get; set; } = DateTime.Now;
+        [DisplayName("Data ostatniego poprawnego logowania")]
+        public DateTime LastSuccessLoginDate { get; set; } = DateTime.Now;
+
+        [DisplayName("Data ostatniego nieudanego logowania")]
+        public DateTime LastFailLoginDate { get; set; }
+
+        [DisplayName("Liczba nieudanych logowań od ostatniego poprawnego logowania")]
+        public int FailedLoginAttemptsCountSinceLastSuccessful { get; set; }
+
+        [DisplayName("Liczba prób logowań do zablokowania konta")]
+        public int AttemptsToLockAccount { get; set; }
 
         public virtual ICollection<AllowedMessage> AllowedMessages { get; set; }
     }

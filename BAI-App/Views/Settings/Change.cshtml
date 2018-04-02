@@ -1,7 +1,40 @@
-﻿
+﻿@model Bai_APP.Models.ViewModels.UserSettingsViewModel
+
 @{
     ViewBag.Title = "Change";
 }
 
-<h2>Change</h2>
+<h2>Informacje</h2>
 
+<div id="container">
+
+    <table class="table">
+
+        <tr>
+            <td>Ostatnia udana próba logowania:</td>
+            <td class="right">@Model.LastSuccessLoginDate</td>
+        </tr>
+
+        <tr>
+            <td>Ostatnia nieudana próba logowania:</td>
+            <td class="right">@Model.LastFailLoginDate</td>
+        </tr>
+
+        <tr>
+            <td>Liczba nieudanych prób logowania:</td>
+            <td class="right">@Model.FailedLoginAttemptsCountSinceLastSuccessful</td>
+        </tr>
+
+        <tr>
+            <td>Blokowanie po:</td>
+            <td class="right"><input type="text" value="@Model.AttemptsToLockAccount"/></td>
+        </tr>
+
+        <tr>
+            <td></td>
+            <td class="right"><button>Zatwierdź</button></td>
+        </tr>
+
+    </table>
+
+</div>

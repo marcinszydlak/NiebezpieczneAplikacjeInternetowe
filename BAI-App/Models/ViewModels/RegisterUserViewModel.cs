@@ -1,9 +1,5 @@
-﻿using Bai_APP.Helpers;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
+﻿using System.ComponentModel.DataAnnotations;
+using Bai_APP.Helpers;
 
 namespace Bai_APP.Entity.ViewModels
 {
