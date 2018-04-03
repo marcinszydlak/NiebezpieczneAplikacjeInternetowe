@@ -19,8 +19,16 @@ namespace Bai_APP.Controllers
                 if (ModelState.IsValid)
                 {
                     LoggedUserViewModel login = UserService.Login(model);
-                    Session["login"] = login;
-                    return RedirectToAction("Index");
+
+                    if (SettingsService.IsAccountLocked(model.Login))
+                    {
+                        return ErrorRedirect("Konto zablokowane!");
+                    }
+                    else
+                    {
+                        Session["login"] = login;
+                        return RedirectToAction("Index");
+                    }
                 }
             }
 

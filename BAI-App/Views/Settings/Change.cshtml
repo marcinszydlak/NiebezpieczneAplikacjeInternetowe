@@ -25,15 +25,26 @@
             <td class="right">@Model.FailedLoginAttemptsCountSinceLastSuccessful</td>
         </tr>
 
-        <tr>
-            <td>Blokowanie po:</td>
-            <td class="right"><input type="text" value="@Model.AttemptsToLockAccount"/></td>
-        </tr>
+        @using (Html.BeginForm(
+            "UpdateAttemptsToLockAccount",
+            "Settings",
+            new { AttemptsNumberToLockAccount = @Model.AttemptsToLockAccount },
+            FormMethod.Get,
+            new { @class = "form-horizontal", role = "form" }))
+        {
+            <tr>
+                <td>Blokowanie po:</td>
+                <td class="right">
+                    @Html.TextBoxFor(m => m.AttemptsToLockAccount, new { @class = "form-control" })
+                </td>
 
-        <tr>
-            <td></td>
-            <td class="right"><button>Zatwierdź</button></td>
-        </tr>
+            </tr>
+
+            <tr>
+                <td></td>
+                <td class="right"><input type="submit" value="Zatwierdź" /></td>
+            </tr>
+        }
 
     </table>
 
