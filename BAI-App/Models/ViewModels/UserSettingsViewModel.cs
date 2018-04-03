@@ -18,5 +18,7 @@ namespace Bai_APP.Models.ViewModels
 
         [DisplayName("Liczba prób logowań do zablokowania konta")]
         public int AttemptsToLockAccount { get; set; }
+
+        public DateTime AccountLockedTo { get; set; }
     }
 }

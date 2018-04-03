@@ -18,7 +18,8 @@ namespace Bai_APP.Services
                     FailedLoginAttemptsCountSinceLastSuccessful = x.FailedLoginAttemptsCountSinceLastSuccessful,
                     LastFailLoginDate = x.LastFailLoginDate,
                     LastSuccessLoginDate = x.LastSuccessLoginDate,
-                    AttemptsToLockAccount = x.AttemptsToLockAccount
+                    AttemptsToLockAccount = x.AttemptsToLockAccount,
+                    AccountLockedTo = x.AccountLockedTo
                 }).First();
             }
         }
@@ -27,7 +28,7 @@ namespace Bai_APP.Services
         {
             UserSettingsViewModel userSettingsViewModel = GetUserSettings(login);
 
-            return userSettingsViewModel.FailedLoginAttemptsCountSinceLastSuccessful >= userSettingsViewModel.AttemptsToLockAccount;
+            return userSettingsViewModel.AccountLockedTo > DateTime.UtcNow;
         }
 
         public static void UpdateAttemptsToLockAccount(string login, int attemptsToLockAccount)
@@ -84,6 +85,7 @@ namespace Bai_APP.Services
             {
                 user.FailedLoginAttemptsCountSinceLastSuccessful = user.FailedLoginAttemptsCountSinceLastSuccessful + 1;
                 user.LastFailLoginDate = DateTime.UtcNow;
+                user.AccountLockedTo = DateTime.UtcNow.AddMinutes(user.FailedLoginAttemptsCountSinceLastSuccessful);
 
                 db.SaveChanges();
             }

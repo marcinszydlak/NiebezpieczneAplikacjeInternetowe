@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Bai_APP.Entity;
 using Bai_APP.Entity.ViewModels;
@@ -55,7 +56,12 @@ namespace Bai_APP.Services
                 db.Users.Add(new User()
                 {
                     UserLogin = model.UserLogin,
-                    PasswordHash = model.Password1
+                    PasswordHash = model.Password1,
+                    AttemptsToLockAccount = 5,
+                    CurrentLoginDate = DateTime.UtcNow,
+                    AccountLockedTo = new DateTime(2000, 1, 1, 12, 0, 0),
+                    LastFailLoginDate = new DateTime(2000, 1, 1, 12, 0, 0),
+                    LastSuccessLoginDate = new DateTime(2000, 1, 1, 12, 0, 0)
                 });
                 db.SaveChanges();
             }

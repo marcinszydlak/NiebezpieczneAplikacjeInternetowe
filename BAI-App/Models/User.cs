@@ -29,8 +29,10 @@ namespace Bai_APP.Entity
         [DisplayName("Liczba nieudanych logowań od ostatniego poprawnego logowania")]
         public int FailedLoginAttemptsCountSinceLastSuccessful { get; set; }
 
-        [DisplayName("Liczba prób logowań do zablokowania konta")]
+        [DisplayName("Liczba niepoprawnych logowań do zablokowania konta")]
         public int AttemptsToLockAccount { get; set; }
+
+        public DateTime AccountLockedTo { get; set; }
 
         public virtual ICollection<AllowedMessage> AllowedMessages { get; set; }
     }
