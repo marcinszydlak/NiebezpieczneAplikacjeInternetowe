@@ -29,7 +29,11 @@ namespace Bai_APP.Services
 
                 if (loggedUserViewModel == null)
                 {
-                    SettingsService.SaveLoginAttempt(model, db);
+                    SettingsService.HandleFailedLogin(model, db);
+                }
+                else
+                {
+                    SettingsService.HandleSuccessLogin(db, model.Login);
                 }
 
                 return loggedUserViewModel;

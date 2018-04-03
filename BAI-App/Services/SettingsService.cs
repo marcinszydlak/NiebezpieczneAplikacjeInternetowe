@@ -44,13 +44,31 @@ namespace Bai_APP.Services
             }
         }
 
-        public static void SaveLoginAttempt(UserLoginViewModel model, DataContext db)
+        internal static void HandleSuccessLogin(DataContext db, string login)
+        {
+            User user = db.Users.Where(x => x.UserLogin == login).FirstOrDefault();
+
+            if (user != null && !IsAccountLocked(login))
+            {
+                user.LastSuccessLoginDate = user.CurrentLoginDate;
+                user.CurrentLoginDate = DateTime.UtcNow;
+
+                user.FailedLoginAttemptsCountSinceLastSuccessful =
+                    user.FailedLoginAttemptsCountSinceLastSuccessful > 0
+                    ? user.FailedLoginAttemptsCountSinceLastSuccessful - 1
+                    : 0;
+
+                db.SaveChanges();
+            }
+        }
+
+        public static void HandleFailedLogin(UserLoginViewModel model, DataContext db)
         {
             bool userExists = db.Users.Any(x => x.UserLogin == model.Login);
 
             if (userExists)
             {
-                IncrementFailedLoginAttempts(model.Login, db);
+                SaveBadLoginAttempt(model.Login, db);
             }
             else
             {
@@ -58,13 +76,15 @@ namespace Bai_APP.Services
             }
         }
 
-        private static void IncrementFailedLoginAttempts(string login, DataContext db)
+        private static void SaveBadLoginAttempt(string login, DataContext db)
         {
             User user = db.Users.Where(x => x.UserLogin == login).FirstOrDefault();
 
             if (user != null)
             {
                 user.FailedLoginAttemptsCountSinceLastSuccessful = user.FailedLoginAttemptsCountSinceLastSuccessful + 1;
+                user.LastFailLoginDate = DateTime.UtcNow;
+
                 db.SaveChanges();
             }
         }

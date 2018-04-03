@@ -18,7 +18,10 @@ namespace Bai_APP.Entity
         public string Salt { get; set; }
 
         [DisplayName("Data ostatniego poprawnego logowania")]
-        public DateTime LastSuccessLoginDate { get; set; } = DateTime.Now;
+        public DateTime LastSuccessLoginDate { get; set; }
+
+        [DisplayName("Data obecnego logowania")]
+        public DateTime CurrentLoginDate { get; set; }
 
         [DisplayName("Data ostatniego nieudanego logowania")]
         public DateTime LastFailLoginDate { get; set; }
