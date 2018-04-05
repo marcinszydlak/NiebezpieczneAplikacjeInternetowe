@@ -22,7 +22,7 @@ namespace Bai_APP.Controllers
                 {
                     LoggedUserViewModel login = UserService.Login(model);
 
-                    if (SettingsService.IsAccountLocked(model.Login))
+                    if (login != null && SettingsService.IsAccountLocked(model.Login))
                     {
                         return ErrorRedirect("Konto zostało czasowo zablokowane! Spróbuj ponownie za kilka minut!");
                     }

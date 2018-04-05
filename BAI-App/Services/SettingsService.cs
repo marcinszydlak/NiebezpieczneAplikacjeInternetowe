@@ -20,7 +20,7 @@ namespace Bai_APP.Services
                     LastSuccessLoginDate = x.LastSuccessLoginDate,
                     AttemptsToLockAccount = x.AttemptsToLockAccount,
                     AccountLockedTo = x.AccountLockedTo
-                }).First();
+                }).FirstOrDefault();
             }
         }
 
@@ -58,6 +58,8 @@ namespace Bai_APP.Services
                     user.FailedLoginAttemptsCountSinceLastSuccessful > 0
                     ? user.FailedLoginAttemptsCountSinceLastSuccessful - 1
                     : 0;
+
+                user.AccountLockedTo = DateTime.UtcNow;
 
                 db.SaveChanges();
             }

@@ -70,7 +70,9 @@ namespace Bai_APP.Services
                     AccountLockedTo = new DateTime(2000, 1, 1, 12, 0, 0),
                     LastFailLoginDate = new DateTime(2000, 1, 1, 12, 0, 0),
                     LastSuccessLoginDate = new DateTime(2000, 1, 1, 12, 0, 0)
-                });
+                };
+
+                db.Users.Add(u);
                 db.SaveChanges();
 
                 return u.UserID;
