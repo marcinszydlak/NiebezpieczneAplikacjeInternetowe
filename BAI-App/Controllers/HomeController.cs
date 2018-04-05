@@ -1,6 +1,8 @@
 ﻿using System.Web.Mvc;
 using Bai_APP.Entity.ViewModels;
+using Bai_APP.Helpers;
 using Bai_APP.Services;
+using BAI_App.Services;
 
 namespace Bai_APP.Controllers
 {
@@ -38,13 +40,18 @@ namespace Bai_APP.Controllers
         [HttpGet]
         public ActionResult Register(RegisterUserViewModel model)
         {
-            if(ModelState.IsValid)
+            if(ModelState.IsValid && !UserService.CheckUserLoginExists(model.UserLogin))
             {
-                UserService.RegisterUser(model);
+                int userID = UserService.RegisterUser(model);
+                MessageService.SetDefaultPermissionsForUser(userID);
                 return RedirectToAction("Index", "Home");
             }
-
-            return View();
+            else
+            {
+                ModelState.AddModelError("UserLogin", Error.UserNameExists);
+                return View();
+            }
+            
         }
 
         [HttpGet]

@@ -191,7 +191,7 @@
     <Compile Include="Models\Message.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\ViewModels\LoggedUserModel.cs" />
-    <Compile Include="Models\ViewModels\MessageePermissionViewModel.cs" />
+    <Compile Include="Models\ViewModels\MessagePermissionViewModel.cs" />
     <Compile Include="Models\ViewModels\MessageViewModel.cs" />
     <Compile Include="Models\ViewModels\RegisterUserViewModel.cs" />
     <Compile Include="Models\ViewModels\UserLoginViewModel.cs" />
@@ -249,7 +249,8 @@
     <Content Include="Views\Message\Edit.cshtml" />
     <Content Include="Views\Message\ManageMessagePermissions.cshtml" />
     <Content Include="Views\Message\ManageUserPermissions.cshtml" />
-    <Content Include="Views\Settings\Change.cshtml" />
+    <Content Include="Views\Message\UserMessagePermission.cshtml" />
+	<Content Include="Views\Settings\Change.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

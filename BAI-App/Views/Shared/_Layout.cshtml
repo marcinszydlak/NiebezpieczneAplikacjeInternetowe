@@ -17,7 +17,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Projekt - bezpieczeństwo aplikacji internetowych", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("Projekt - BAI", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse">
                 @if (Session["login"] == null)
@@ -36,7 +36,7 @@
                     <ul class="nav navbar-nav navbar-right">
                         <li>@Html.ActionLink("Utwórz nową wiadomość", "Create", "Message")</li>
                         <li>@Html.ActionLink("Pokaż moje wiadomosci", "List", "Message")</li>
-                        <li>@Html.ActionLink("Zarządzaj dostępem do wiadomosci", "ManageMessagePermissions", "Message")</li>
+                        <li>@Html.ActionLink("Zarządzaj wiadomościami", "ManageMessagePermissions", "Message")</li>
                     </ul>
                 }
             </div>

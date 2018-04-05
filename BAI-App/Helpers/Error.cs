@@ -12,5 +12,6 @@ namespace Bai_APP.Helpers
         public const string InsufficientResourcePermission = "Nie masz uprawnień do zasobu";
         public const string InvalidMessage = "Nie ma takiej wiadomości";
         public const string PasswordMustBeSame = "Hasła nie są takie same";
+        public const string UserNameExists = "Użytkownik o podanym loginie już istnieje";
     }
 }

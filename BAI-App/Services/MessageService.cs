@@ -27,6 +27,49 @@ namespace BAI_App.Services
             return messages;
         }
 
+        public static List<MessageViewModel> GetUserVisibleMessages(int userID)
+        {
+            List<MessageViewModel> messages = new List<MessageViewModel>();
+            using (DataContext db = new DataContext())
+            {
+                messages = db.AllowedMessages.Where(x => x.UserID == userID && x.PermissionLevel >= (int)Permission.ReadOnly).Select(x => new MessageViewModel()
+                {
+                    MessageID = x.MessageID,
+                    MessageText = x.Message.Text
+                }).ToList();
+            }
+            return messages;
+        }
+
+        public static void SetPermissionForUser(int userID,int messageID,Permission permission)
+        {
+            using (DataContext db = new DataContext())
+            {
+                AllowedMessage message = db.AllowedMessages.FirstOrDefault(x => x.UserID == userID && x.MessageID == messageID);
+                message.PermissionLevel = (int)permission;
+                db.SaveChanges();
+            }
+            
+        }
+
+        public static void SetDefaultPermissionsForUser(int userID,Permission permission = Permission.Unavailable)
+        {
+            using (DataContext db = new DataContext())
+            {
+                List<int> messageIDs = db.Messages.Select(x => x.MessageID).ToList();
+                foreach(int messageID in messageIDs)
+                {
+                    db.AllowedMessages.Add(new AllowedMessage()
+                    {
+                        MessageID = messageID,
+                        UserID = userID,
+                        PermissionLevel = (int)permission
+                    });
+                    db.SaveChanges();
+                }
+            }
+        }
+
         public static bool CheckMessageExists(MessageViewModel model)
         {
             using (DataContext db = new DataContext())
@@ -35,6 +78,21 @@ namespace BAI_App.Services
             }
         }
 
+        public static void FillPermissions(int messageID)
+        {
+            using (DataContext db = new DataContext())
+            {
+                List<int> users = db.Users.Select(x => x.UserID).ToList();
+                foreach(int user in users)
+                {
+                    var exists = db.AllowedMessages.FirstOrDefault(x => x.UserID == user && x.MessageID == messageID);
+                    if(exists == null)
+                    {
+                        InsertAllowedMessage(user, messageID, Permission.Unavailable);
+                    }
+                }
+            }
+        }
         public static List<MessagePermissionViewModel> GetMessagePermissions(int messageID)
         {
             using (DataContext db = new DataContext())
@@ -43,7 +101,8 @@ namespace BAI_App.Services
                 {
                     MessageID = messageID,
                     PermissionLevel = x.PermissionLevel,
-                    UserID = x.UserID
+                    UserID = x.UserID,
+                    UserLogin = x.User.UserLogin
                 }).ToList();
             }
         }
@@ -67,6 +126,20 @@ namespace BAI_App.Services
             }
         }
 
+        public static MessagePermissionViewModel GetUserPermission(int userID,int messageID)
+        {
+            using (DataContext db = new DataContext())
+            {
+                AllowedMessage message = db.AllowedMessages.FirstOrDefault(x => x.MessageID == messageID && x.UserID == userID);
+                return new MessagePermissionViewModel()
+                {
+                    MessageID = messageID,
+                    PermissionLevel = message.PermissionLevel,
+                    UserID = userID,
+                    UserLogin = message.User.UserLogin
+                };
+            }
+        }
         public static MessageViewModel GetMessage(int? MessageID)
         {
             if (MessageID.HasValue)

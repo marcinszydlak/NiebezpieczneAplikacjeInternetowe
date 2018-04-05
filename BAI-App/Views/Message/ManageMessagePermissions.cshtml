@@ -17,7 +17,7 @@
             @Html.DisplayFor(modelItem => item.MessageText)
         </td>
         <td>
-            @Html.ActionLink("Edit", "PermissionEdit", new { MessageID=item.MessageID, MessageText = item.MessageText }) |
+            @Html.ActionLink("Zmień uprawnienia", "ManageUserPermissions", new { MessageID=item.MessageID, MessageText = item.MessageText }) |
 
         </td>
     </tr>
