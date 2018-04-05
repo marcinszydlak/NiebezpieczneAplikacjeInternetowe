@@ -6,32 +6,21 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.MessageID)
+            @Html.DisplayNameFor(model => model.UserLogin)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.UserID)
+            @Html.DisplayName("Operacja")
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PermissionLevel)
-        </th>
-        <th></th>
     </tr>
 
-@foreach (var item in Model) {
+@foreach (var item in Model)
+{
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.MessageID)
+            @Html.DisplayFor(modelItem => item.UserLogin)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.UserID)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PermissionLevel)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            @Html.ActionLink("Ustaw", "UserMessagePermission", new { UserID = item.UserID,MessageID = item.MessageID})
         </td>
     </tr>
 }

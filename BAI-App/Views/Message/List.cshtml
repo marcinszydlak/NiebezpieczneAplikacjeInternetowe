@@ -27,9 +27,8 @@
                 @Html.DisplayFor(modelItem => item.MessageText)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { MessageID = item.MessageID, MessageText = item.MessageText }) |
-                @Html.ActionLink("Details", "Details", new { MessageID = item.MessageID, MessageText = item.MessageText }) |
-                @Html.ActionLink("Delete", "Delete", new { MessageID = item.MessageID, MessageText = item.MessageText })
+                @Html.ActionLink("Edit", "Edit", new { MessageID = item.MessageID }) |
+                @Html.ActionLink("Delete", "Delete", new { MessageID = item.MessageID,MessageText = item.MessageText })
             </td>
         </tr>
     }

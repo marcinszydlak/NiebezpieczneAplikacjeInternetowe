@@ -28,6 +28,14 @@ namespace Bai_APP.Services
             }  
         }
 
+        public static bool CheckUserLoginExists(string login)
+        {
+            using (DataContext db = new DataContext())
+            {
+                return db.Users.FirstOrDefault(x => x.UserLogin == login) != null;
+            }
+        }
+
         public static List<int> GetUserIDs()
         {
             using (DataContext db = new DataContext())
@@ -36,16 +44,20 @@ namespace Bai_APP.Services
             }
         }
 
-        public static void RegisterUser(RegisterUserViewModel model)
+        public static int RegisterUser(RegisterUserViewModel model)
         {
             using (DataContext db = new DataContext())
             {
-                db.Users.Add(new User()
+                User u = new User()
                 {
                     UserLogin = model.UserLogin,
-                    PasswordHash = model.Password1
-                });
+                    PasswordHash = model.Password1,
+                    LastLogin = DateTime.Now,
+                    Salt = string.Empty
+                };
+                db.Users.Add(u);
                 db.SaveChanges();
+                return u.UserID;
             }
 
         }

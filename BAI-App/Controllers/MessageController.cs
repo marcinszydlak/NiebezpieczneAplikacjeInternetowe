@@ -33,6 +33,7 @@ namespace BAI_App.Controllers
                 {
                     LoggedUserViewModel l = (LoggedUserViewModel)Session["login"];
                     MessageService.InsertMessage(l.UserID, message.MessageText);
+                    l.Messages.Add(message);
                     return RedirectToAction("List", "Message");
                 }
                 return View(message);
@@ -49,7 +50,7 @@ namespace BAI_App.Controllers
             LoggedUserViewModel l = (LoggedUserViewModel)Session["login"];
             if (l != null)
             {
-                List<MessageViewModel> messages = l.Messages;
+                List<MessageViewModel> messages = MessageService.GetUserVisibleMessages(l.UserID);
                 return View(messages);
             }
             else
@@ -78,8 +79,6 @@ namespace BAI_App.Controllers
                 if (ModelState.IsValid)
                 {
                     MessageService.UpdateMessage(item);
-
-                    l.Messages.Where(x => x.MessageID == item.MessageID).First().MessageText = item.MessageText;
                     return RedirectToAction("List");
                 }
                 else
@@ -135,8 +134,9 @@ namespace BAI_App.Controllers
             {
                 if (MessageService.CheckMessagePermission(l.UserID, model.MessageID, Permission.Owner))
                 {
-                    List<MessagePermissionViewModel> permissionModel = MessageService.GetMessagePermissions(model.MessageID);
-                    return View(model);
+                    MessageService.FillPermissions(model.MessageID);
+                    List<MessagePermissionViewModel> permissionModel = MessageService.GetMessagePermissions(model.MessageID).Where(x => x.UserID != l.UserID).ToList();
+                    return View(permissionModel);
                 }
                 else
                 {
@@ -147,6 +147,35 @@ namespace BAI_App.Controllers
             {
                 return ErrorRedirect(Error.InvalidMessage);
             }
+        }
+        [HttpGet]
+        public ActionResult UserMessagePermission(MessagePermissionViewModel model)
+        {
+            LoggedUserViewModel l = (LoggedUserViewModel)Session["login"];
+            if (l != null)
+            {
+                MessagePermissionViewModel model2 = null;
+                if (MessageService.CheckMessagePermission(l.UserID, model.MessageID, Permission.Owner))
+                {
+                    if (!ModelState.IsValid)
+                    {
+                        model2 = MessageService.GetUserPermission(model.UserID, model.MessageID);
+                    }
+                    else
+                    {
+                        model2 = model;
+                        MessageService.SetPermissionForUser(model.UserID, model.MessageID, (Permission)model.PermissionLevel);
+                        MessageViewModel message = MessageService.GetMessage(model.MessageID);
+                        return RedirectToAction("ManageUserPermissions", "Message", message);
+                    }
+                }
+                return View(model2);
+            }
+            else
+            {
+                return ErrorRedirect(Error.InsufficientResourcePermission);
+            }
+            
         }
 
         protected override void Dispose(bool disposing)
