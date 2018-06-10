@@ -26,6 +26,7 @@ namespace Bai_APP.Services
                             MessageID = y.MessageID,
                             MessageText = y.Text
                         }).ToList(),
+                    AccountLockedTo = x.AccountLockedTo
                 }).FirstOrDefault();
 
                 if (loggedUserViewModel == null)

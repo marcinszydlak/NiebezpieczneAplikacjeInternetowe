@@ -16,31 +16,30 @@ namespace Bai_APP.Controllers
         [HttpGet]
         public ActionResult Login(UserLoginViewModel model)
         {
-            if (!string.IsNullOrEmpty(model.Login) && !string.IsNullOrEmpty(model.Password))
+            if (!string.IsNullOrEmpty(model.Login) && !string.IsNullOrEmpty(model.Password) && ModelState.IsValid)
             {
-                if (ModelState.IsValid)
+                if (UserService.CheckUserLoginExists(model.Login))
                 {
                     LoggedUserViewModel login = UserService.Login(model);
 
-                    if (login != null && SettingsService.IsAccountLocked(model.Login))
+                    if (SettingsService.IsLoggingDelayedFor(model.Login))
                     {
-                        return ErrorRedirect("Konto zostało czasowo zablokowane! Spróbuj ponownie za kilka minut!");
+                        return ErrorRedirect($"Konto zostało czasowo zablokowane do {SettingsService._userSettingsViewModel.AccountLockedTo.AddHours(2)}! Spróbuj ponownie wkrótce!");
                     }
-                    else
-                    {
-                        Session["login"] = login;
-                        return RedirectToAction("Index");
-                    }
+
+                    Session["login"] = login;
+
+                    return RedirectToAction("Index");
                 }
             }
 
             return View();
         }
-        
+
         [HttpGet]
         public ActionResult Register(RegisterUserViewModel model)
         {
-            if(ModelState.IsValid && !UserService.CheckUserLoginExists(model.UserLogin))
+            if (ModelState.IsValid && !UserService.CheckUserLoginExists(model.UserLogin))
             {
                 int userID = UserService.RegisterUser(model);
                 MessageService.SetDefaultPermissionsForUser(userID);
@@ -51,7 +50,6 @@ namespace Bai_APP.Controllers
                 ModelState.AddModelError("UserLogin", Error.UserNameExists);
                 return View();
             }
-            
         }
 
         [HttpGet]

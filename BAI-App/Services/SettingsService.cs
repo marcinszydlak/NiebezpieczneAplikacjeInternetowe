@@ -8,6 +8,8 @@ namespace Bai_APP.Services
 {
     public class SettingsService
     {
+        public static UserSettingsViewModel _userSettingsViewModel { get; private set; }
+
         public static UserSettingsViewModel GetUserSettings(string userLogin)
         {
             using (var db = new DataContext())
@@ -19,21 +21,22 @@ namespace Bai_APP.Services
                     LastFailLoginDate = x.LastFailLoginDate,
                     LastSuccessLoginDate = x.LastSuccessLoginDate,
                     AttemptsToLockAccount = x.AttemptsToLockAccount,
-                    AccountLockedTo = x.AccountLockedTo
+                    AccountLockedTo = x.AccountLockedTo,
+                    IsAccountLockedPermamently = x.IsAccountLockedPermamently
                 }).FirstOrDefault();
             }
         }
 
-        public static bool IsAccountLocked(string login)
+        public static bool IsLoggingDelayedFor(string login)
         {
-            UserSettingsViewModel userSettingsViewModel = GetUserSettings(login);
+            _userSettingsViewModel = GetUserSettings(login);
 
-            return userSettingsViewModel.AccountLockedTo > DateTime.UtcNow;
+            return _userSettingsViewModel.AccountLockedTo > DateTime.UtcNow;
         }
 
         public static void UpdateAttemptsToLockAccount(string login, int attemptsToLockAccount)
         {
-            using (DataContext db = new DataContext())
+            using (var db = new DataContext())
             {
                 User user = db.Users.Where(x => x.UserLogin == login).FirstOrDefault();
 
@@ -42,26 +45,6 @@ namespace Bai_APP.Services
                     user.AttemptsToLockAccount = attemptsToLockAccount;
                     db.SaveChanges();
                 }
-            }
-        }
-
-        internal static void HandleSuccessLogin(DataContext db, string login)
-        {
-            User user = db.Users.Where(x => x.UserLogin == login).FirstOrDefault();
-
-            if (user != null && !IsAccountLocked(login))
-            {
-                user.LastSuccessLoginDate = user.CurrentLoginDate;
-                user.CurrentLoginDate = DateTime.UtcNow;
-
-                user.FailedLoginAttemptsCountSinceLastSuccessful =
-                    user.FailedLoginAttemptsCountSinceLastSuccessful > 0
-                    ? user.FailedLoginAttemptsCountSinceLastSuccessful - 1
-                    : 0;
-
-                user.AccountLockedTo = DateTime.UtcNow;
-
-                db.SaveChanges();
             }
         }
 
@@ -79,18 +62,40 @@ namespace Bai_APP.Services
             }
         }
 
+        public static void HandleSuccessLogin(DataContext db, string login)
+        {
+            User user = db.Users.Where(x => x.UserLogin == login).FirstOrDefault();
+
+            if (user != null && !IsLoggingDelayedFor(login))
+            {
+                user.LastSuccessLoginDate = user.CurrentLoginDate;
+                user.CurrentLoginDate = DateTime.UtcNow;
+
+                user.FailedLoginAttemptsCountSinceLastSuccessful =
+                    user.FailedLoginAttemptsCountSinceLastSuccessful > 0
+                    ? user.FailedLoginAttemptsCountSinceLastSuccessful - 1
+                    : 0;
+
+                user.AccountLockedTo = DateTime.UtcNow;
+
+                db.SaveChanges();
+            }
+        }
+
         private static void SaveBadLoginAttempt(string login, DataContext db)
         {
             User user = db.Users.Where(x => x.UserLogin == login).FirstOrDefault();
 
-            if (user != null)
+            if (user == null)
             {
-                user.FailedLoginAttemptsCountSinceLastSuccessful = user.FailedLoginAttemptsCountSinceLastSuccessful + 1;
-                user.LastFailLoginDate = DateTime.UtcNow;
-                user.AccountLockedTo = DateTime.UtcNow.AddMinutes(user.FailedLoginAttemptsCountSinceLastSuccessful);
-
-                db.SaveChanges();
+                return;
             }
+
+            user.FailedLoginAttemptsCountSinceLastSuccessful = user.FailedLoginAttemptsCountSinceLastSuccessful + 1;
+            user.LastFailLoginDate = DateTime.UtcNow;
+            user.AccountLockedTo = DateTime.UtcNow.AddSeconds(user.FailedLoginAttemptsCountSinceLastSuccessful * 5);
+
+            db.SaveChanges();
         }
 
         private static void SaveAnonymousLoginAttempt(string login, DataContext db)

@@ -35,5 +35,7 @@ namespace Bai_APP.Entity
         public DateTime AccountLockedTo { get; set; }
 
         public virtual ICollection<AllowedMessage> AllowedMessages { get; set; }
+
+        public bool IsAccountLockedPermamently { get; set; }
     }
 }

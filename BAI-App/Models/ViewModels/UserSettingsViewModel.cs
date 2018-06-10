@@ -20,5 +20,7 @@ namespace Bai_APP.Models.ViewModels
         public int AttemptsToLockAccount { get; set; }
 
         public DateTime AccountLockedTo { get; set; }
+
+        public bool IsAccountLockedPermamently { get; set; }
     }
 }
