@@ -29,6 +29,8 @@ namespace Bai_APP.Services
                     AccountLockedTo = x.AccountLockedTo
                 }).FirstOrDefault();
 
+                loggedUserViewModel.AccountLockedTo = loggedUserViewModel.AccountLockedTo.AddHours(2);
+
                 if (loggedUserViewModel == null)
                 {
                     SettingsService.HandleFailedLogin(model, db);

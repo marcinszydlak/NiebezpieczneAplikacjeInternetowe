@@ -22,9 +22,13 @@ namespace Bai_APP.Controllers
                 {
                     LoggedUserViewModel login = UserService.Login(model);
 
-                    if (SettingsService.IsLoggingDelayedFor(model.Login))
+                    if (SettingsService.IsAccountLocked(model.Login))
                     {
-                        return ErrorRedirect($"Konto zostało czasowo zablokowane do {SettingsService._userSettingsViewModel.AccountLockedTo.AddHours(2)}! Spróbuj ponownie wkrótce!");
+                        return ErrorRedirect($"Konto zostało całkowicie zablokowane! Skontaktuj się z administratorem w celu odblokowania.");
+                    }
+                    else if (SettingsService.IsLoggingDelayedFor(model.Login))
+                    {
+                        return ErrorRedirect($"Konto zostało czasowo zablokowane do {SettingsService._userSettingsViewModel.AccountLockedTo}! Spróbuj ponownie wkrótce!");
                     }
 
                     Session["login"] = login;

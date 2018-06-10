@@ -14,7 +14,7 @@ namespace Bai_APP.Services
         {
             using (var db = new DataContext())
             {
-                return db.Users.Where(x => x.UserLogin == userLogin).Select(x => new UserSettingsViewModel()
+                UserSettingsViewModel userSettingsViewModel = db.Users.Where(x => x.UserLogin == userLogin).Select(x => new UserSettingsViewModel()
                 {
                     UserId = x.UserID,
                     FailedLoginAttemptsCountSinceLastSuccessful = x.FailedLoginAttemptsCountSinceLastSuccessful,
@@ -24,14 +24,25 @@ namespace Bai_APP.Services
                     AccountLockedTo = x.AccountLockedTo,
                     IsAccountLockedPermamently = x.IsAccountLockedPermamently
                 }).FirstOrDefault();
+
+                userSettingsViewModel.LastFailLoginDate = userSettingsViewModel.LastFailLoginDate.AddHours(2);
+                userSettingsViewModel.LastSuccessLoginDate = userSettingsViewModel.LastSuccessLoginDate.AddHours(2);
+                userSettingsViewModel.AccountLockedTo = userSettingsViewModel.AccountLockedTo.AddHours(2);
+
+                return userSettingsViewModel;
             }
+        }
+
+        public static bool IsAccountLocked(string login)
+        {
+            return GetUserSettings(login).IsAccountLockedPermamently;
         }
 
         public static bool IsLoggingDelayedFor(string login)
         {
             _userSettingsViewModel = GetUserSettings(login);
 
-            return _userSettingsViewModel.AccountLockedTo > DateTime.UtcNow;
+            return _userSettingsViewModel.AccountLockedTo > DateTime.UtcNow.AddHours(2);
         }
 
         public static void UpdateAttemptsToLockAccount(string login, int attemptsToLockAccount)
@@ -94,6 +105,11 @@ namespace Bai_APP.Services
             user.FailedLoginAttemptsCountSinceLastSuccessful = user.FailedLoginAttemptsCountSinceLastSuccessful + 1;
             user.LastFailLoginDate = DateTime.UtcNow;
             user.AccountLockedTo = DateTime.UtcNow.AddSeconds(user.FailedLoginAttemptsCountSinceLastSuccessful * 5);
+
+            if (user.AttemptsToLockAccount <= user.FailedLoginAttemptsCountSinceLastSuccessful)
+            {
+                user.IsAccountLockedPermamently = true;
+            }
 
             db.SaveChanges();
         }
