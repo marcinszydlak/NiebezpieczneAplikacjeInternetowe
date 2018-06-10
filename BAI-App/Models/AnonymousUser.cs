@@ -11,5 +11,9 @@ namespace Bai_APP.Models
         public string Login { get; set; }
 
         public DateTime Time { get; set; }
+
+        public DateTime AccountLockedTo { get; set; }
+
+        public int FailedLoginAttempts { get; set; }
     }
 }

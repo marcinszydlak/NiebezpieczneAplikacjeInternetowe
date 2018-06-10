@@ -69,7 +69,7 @@ namespace Bai_APP.Services
             }
             else
             {
-                SaveAnonymousLoginAttempt(model.Login, db);
+                AnonymousService.SaveAnonymousLoginAttempt(model.Login);
             }
         }
 
@@ -110,17 +110,6 @@ namespace Bai_APP.Services
             {
                 user.IsAccountLockedPermamently = true;
             }
-
-            db.SaveChanges();
-        }
-
-        private static void SaveAnonymousLoginAttempt(string login, DataContext db)
-        {
-            db.AnonymousUsers.Add(new Models.AnonymousUser()
-            {
-                Login = login,
-                Time = DateTime.UtcNow
-            });
 
             db.SaveChanges();
         }

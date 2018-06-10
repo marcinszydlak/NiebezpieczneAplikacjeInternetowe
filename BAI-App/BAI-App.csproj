@@ -191,6 +191,10 @@
     <Compile Include="Migrations\201806101243283_Add_IsAccountLockedPermamently_column_to_User_table.Designer.cs">
       <DependentUpon>201806101243283_Add_IsAccountLockedPermamently_column_to_User_table.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201806101523555_Add_columns_to_AnonymousUser_table.cs" />
+    <Compile Include="Migrations\201806101523555_Add_columns_to_AnonymousUser_table.Designer.cs">
+      <DependentUpon>201806101523555_Add_columns_to_AnonymousUser_table.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AllowedMessage.cs" />
     <Compile Include="Models\AnonymousUser.cs" />
@@ -205,6 +209,7 @@
     <Compile Include="Models\ViewModels\UserLoginViewModel.cs" />
     <Compile Include="Models\ViewModels\UserSettingsViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\AnonymousService.cs" />
     <Compile Include="Services\MessageService.cs" />
     <Compile Include="Services\SettingsService.cs" />
     <Compile Include="Services\UserService.cs" />
@@ -298,6 +303,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201806101243283_Add_IsAccountLockedPermamently_column_to_User_table.resx">
       <DependentUpon>201806101243283_Add_IsAccountLockedPermamently_column_to_User_table.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806101523555_Add_columns_to_AnonymousUser_table.resx">
+      <DependentUpon>201806101523555_Add_columns_to_AnonymousUser_table.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
